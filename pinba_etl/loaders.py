@@ -1,10 +1,10 @@
 import os.path
 import yaml
-from reports import CardReport, Report, REPORTS
-from queries import Query, QUERIES
+from .collectd import Gauge, Collector
+from .queries import Query, QUERIES
+from .reports import CardReport, Report, REPORTS
 
 LOCAL_REPORTS = {}
-
 DEFAULT_FILENAME = '~/pinba-ref.yml'
 
 
@@ -27,11 +27,23 @@ def load_config(filename):
             load_report(report)
 
     for query in config.get('collectd', []):
-        load_query(query)
+        q = load_query(query)
+        q_name = query['name']
+        for gauge in query.get('gauges', []):
+            gauge.setdefault('provider', q_name)
+            load_gauge(gauge)
+        Collector(name=q_name, query=q)
+
+    for gauge in config.get('gauges', []):
+        load_gauge(gauge)
+
+
+def load_gauge(gauge):
+    return Gauge(**gauge)
 
 
 def load_cart_report(report):
-    attrs = 'type tablename version min_time max_time tags percentiles timers'.split()
+    attrs = 'type tablename version min_time max_time tags percentiles timers'.split()  # noqa
     opts = {k: v for k, v in report.items() if k in attrs}
     result = CardReport(**opts)
     if 'id' in report:
@@ -65,14 +77,18 @@ def load_query(query):
             provider = LOCAL_REPORTS[provider_id]
             stmt = provider.query(stmt)
         query['stmt'] = stmt
-    return Query(**query)
+    attrs = 'name stmt'.split()
+    opts = {k: v for k, v in query.items() if k in attrs}
+
+    response = Query(**opts)
+    return response
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', nargs='?', default=DEFAULT_FILENAME)
-    parser.add_argument('--report', action='append', dest='reports', default=[])
-    parser.add_argument('--collectd', action='append', dest='queries', default=[])
+    parser.add_argument('--report', action='append', dest='reports')
+    parser.add_argument('--collectd', action='append', dest='queries')
 
     args = parser.parse_args()
     load_config(args.filename)

@@ -1,0 +1,59 @@
+reports:
+  - type: info
+    description: overall info report
+  - type: report1
+    description: report aggregated by script name
+  - type: report2
+    description: report aggregated by domain name
+  - type: report3
+    description: report aggregated by hostname
+  - type: report4
+    description: report aggregated by domain name and script name
+  - type: report5
+    description: report aggregated by hostname and script name
+  - type: report6
+    description: report aggregated by hostname and domain name
+  - type: report7
+    description: report aggregated by hostname, domain name and script name
+  - type: report8
+    description: report aggregated by HTTP status
+  - type: report9
+    description: report aggregated by script name and HTTP status
+  - type: report10
+    description: report aggregated by domain name and HTTP status
+  - type: report11
+    description: report aggregated by hostname and HTTP status
+  - type: report12
+    description: report aggregated by hostname, script name and HTTP status
+  - type: report13
+    description: report aggregated by schema
+  - type: report14
+    description: report aggregated by schema and script name
+  - type: report15
+    description: report aggregated by schema and domain name
+  - type: report16
+    description: report aggregated by schema and hostname
+  - type: report17
+    description: report aggregated by schema, hostname and script name
+  - type: report18
+    description: report aggregated by schema, hostname and HTTP status
+  - type: tag_report
+    description: tag report aggregated by script name and tag value
+  - type: tag_report2
+    description: tag report aggregated by script name, domain name, hostname and tag value
+  - type: tag2_report
+    description: tag report aggregated by script name and values of 2 tags
+  - type: tag2_report2
+    description: tag report aggregated by script name, domain name, hostname and values of 2 tags
+  - type: tagN_report
+    description: tag report aggregated by script name and values of N tags
+  - type: tagN_report2
+    description: tag report aggregated by script name, domain name, hostname and values of N tags
+  - type: tag_info
+    description: tag report aggregated by tag value
+  - type: tag2_info
+    description: tag report aggregated by values of 2 tags
+  - type: tagN_info
+    description: tag report aggregated by values of N tags
+  - type: histogram
+    description: histogram data for a report

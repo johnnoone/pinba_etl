@@ -1,7 +1,9 @@
 import os.path
+import yaml
+from .renderers import render_from_string
 from collections import OrderedDict
 from textwrap import dedent
-from renderers import render_template
+
 here = os.path.dirname(os.path.realpath(__file__))
 
 REPORT_TYPES = OrderedDict()
@@ -10,11 +12,11 @@ REPORTS = OrderedDict()
 
 class ReportTypeBase:
 
-    def __init__(self, name, description, template):
-        self.name = name
+    def __init__(self, type, description, template):
+        self.type = type
         self.description = description
         self.template = template
-        REPORT_TYPES[name] = self
+        REPORT_TYPES[type] = self
 
     def generate(self, tablename, conditions, percentiles, timers):
         def to_list(obj):
@@ -24,7 +26,7 @@ class ReportTypeBase:
                 return ','.join([str(elt) for elt in obj])
             return obj
 
-        return render_template(self.template, {
+        return render_from_string(self.template, {
             'tablename': tablename,
             'conditions': conditions,
             'percentiles': percentiles,
@@ -34,53 +36,22 @@ class ReportTypeBase:
 
 class ReportType(ReportTypeBase):
 
-    def __init__(self, name, description):
-        with open(os.path.join(here, 'templates', '%s.tpl' % name)) as file:
+    def __init__(self, type, description):
+        with open(os.path.join(here, 'templates', '%s.sql.j2' % type)) as file:
             template = file.read()
-        super().__init__(name=name, description=description, template=template)
-
-
-ReportType('info', "overall info report")
-ReportType('report1', "report aggregated by script name")
-ReportType('report2', "report aggregated by domain name")
-ReportType('report3', "report aggregated by hostname")
-ReportType('report4', "report aggregated by domain name and script name")
-ReportType('report5', "report aggregated by hostname and script name")
-ReportType('report6', "report aggregated by hostname and domain name")
-ReportType('report7', "report aggregated by hostname, domain name and script name")
-ReportType('report8', "report aggregated by HTTP status")
-ReportType('report9', "report aggregated by script name and HTTP status")
-ReportType('report10', "report aggregated by domain name and HTTP status")
-ReportType('report11', "report aggregated by hostname and HTTP status")
-ReportType('report12', "report aggregated by hostname, script name and HTTP status")
-ReportType('report13', "report aggregated by schema")
-ReportType('report14', "report aggregated by schema and script name")
-ReportType('report15', "report aggregated by schema and domain name")
-ReportType('report16', "report aggregated by schema and hostname")
-ReportType('report17', "report aggregated by schema, hostname and script name")
-ReportType('report18', "report aggregated by schema, hostname and HTTP status")
-ReportType('tag_report', "tag report aggregated by script name and tag value")
-ReportType('tag_report2', "tag report aggregated by script name, domain name, hostname and tag value")
-ReportType('tag2_report', "tag report aggregated by script name and values of 2 tags")
-ReportType('tag2_report2', "tag report aggregated by script name, domain name, hostname and values of 2 tags")
-ReportType('tagN_report', "tag report aggregated by script name and values of N tags")
-ReportType('tagN_report2', "tag report aggregated by script name, domain name, hostname and values of N tags")
-ReportType('tag_info', "tag report aggregated by tag value")
-ReportType('tag2_info', "tag report aggregated by values of 2 tags")
-ReportType('tagN_info', "tag report aggregated by values of N tags")
-ReportType('histogram', "histogram data for a report")
+        super().__init__(type=type, description=description, template=template)
 
 
 class Report:
 
-    def __init__(self, type, tablename, *, min_time=None, max_time=None, tags=None, percentiles=None, timers=None):
+    def __init__(self, type, tablename, **kwargs):
         self.type = type
         self.tablename = tablename
-        self.min_time = min_time
-        self.max_time = max_time
-        self.tags = tags or {}
-        self.percentiles = percentiles or []
-        self.timers = timers or []
+        self.min_time = kwargs.pop('min_time', None)
+        self.max_time = kwargs.pop('max_time', None)
+        self.tags = kwargs.pop('tags', {})
+        self.percentiles = kwargs.pop('percentiles', [])
+        self.timers = kwargs.pop('timers', [])
         REPORTS[tablename] = self
 
     @property
@@ -165,3 +136,8 @@ def flatten_tags(obj):
                 yield k, w
         else:
             yield k, v
+
+with open(os.path.join(here, 'reports.yml')) as file:
+    data = yaml.load(file)
+    for report in data['reports']:
+        ReportType(**report)

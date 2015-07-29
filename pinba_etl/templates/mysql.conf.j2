@@ -1,0 +1,33 @@
+<Plugin dbi>
+{% for query in queries %}
+    <Query {{ query.name | to_attr }}>
+        Statement {{ query.stmt | to_attr }}
+{%- for gauge in query.gauges %}
+        <Result>
+            Type "gauge"
+{%- if gauge.prefix %}
+            InstancePrefix {{ gauge.prefix | to_attr }}
+{%- endif %}
+{%- if gauge.instances_from %}
+            InstancesFROM {{ gauge.instances_from | to_attr }}
+{%- endif %}
+{%- if gauge.values_from %}
+            ValuesFrom {{ gauge.values_from | to_attr }}
+{%- endif %}
+        </Result>
+{%- endfor %}
+    </Query>
+{%- endfor %}
+
+    <Database "pinba">
+        Driver "mysql"
+        DriverOption "host" {{ driver.host | to_attr }}
+        DriverOption "username" {{ driver.username | to_attr }}
+        DriverOption "password" {{ driver.password | to_attr }}
+        DriverOption "dbname" {{ driver.dbname | to_attr }}
+        SelectDB {{ driver.dbname | to_attr }}
+{%- for query in queries %}
+        Query {{ query.name | to_attr }}
+{%- endfor %}
+    </Database>
+</Plugin>
