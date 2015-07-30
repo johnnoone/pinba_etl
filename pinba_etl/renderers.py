@@ -2,6 +2,8 @@ import os.path
 from jinja2 import Environment, FileSystemLoader
 from xml.sax.saxutils import quoteattr
 
+__all__ = ['render_from_string', 'render_from_template']
+
 here = os.path.dirname(os.path.abspath(__file__))
 
 

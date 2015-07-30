@@ -1,3 +1,5 @@
+__all__ = ['Gauge', 'Collector']
+
 
 class Gauge:
 
@@ -23,8 +25,3 @@ class Collector:
     __str__ = stmt
 
     __iter__ = lambda x: iter(x.gauges)
-
-    def has_gauges(self):
-        for g in self.gauges:
-            return True
-        return False

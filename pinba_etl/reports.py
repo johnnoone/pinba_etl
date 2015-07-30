@@ -4,6 +4,8 @@ from .renderers import render_from_string
 from collections import OrderedDict
 from textwrap import dedent
 
+__all__ = ['CardReport', 'Report']
+
 here = os.path.dirname(os.path.realpath(__file__))
 
 REPORT_TYPES = OrderedDict()

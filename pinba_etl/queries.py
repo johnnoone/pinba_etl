@@ -1,7 +1,6 @@
-from collections import OrderedDict
 from textwrap import dedent
 
-QUERIES = OrderedDict()
+__all__ = ['Query']
 
 
 class Query:

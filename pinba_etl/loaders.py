@@ -5,6 +5,8 @@ from .queries import Query
 from .reports import CardReport, Report
 from collections import defaultdict, OrderedDict
 
+__all__ = ['DEFAULT_FILENAME', 'Loader', 'load_config']
+
 DEFAULT_FILENAME = '~/pinba-ref.yml'
 
 

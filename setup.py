@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pinba_etl',
-    version='0.1',
+    version='0.2',
     description='Pinba Utilities',
     author='Xavier Barbosa',
     author_email='clint.northwood@gmail.com',
