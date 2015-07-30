@@ -8,13 +8,13 @@ class Gauge:
 
     def __init__(self,
                  provider,
-                 prefix=None,
-                 values_from=None,
-                 instances_from=None):
+                 name=None,
+                 values=None,
+                 cardinality=None):
         self.provider = provider
-        self.prefix = prefix
-        self.instances_from = instances_from
-        self.values_from = values_from
+        self.name = name
+        self.cardinality = cardinality
+        self.values = values
         GAUGES.setdefault(provider, []).append(self)
 
 

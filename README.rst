@@ -43,9 +43,9 @@ Create a definitions file '~/pinba-ref.yml' and write some data in it::
           FROM {tablename}
         provider: myreport:union
         gauges:
-          - prefix: myprefix2
-            instances_from: status
-            values_from: req_per_sec
+          - name: myprefix2
+            cardinality: status
+            values: req_per_sec
 
 
 Now generate report creating queries::
