@@ -84,11 +84,11 @@ class Report:
 
 class CardReport:
 
-    def __init__(self, type, tablename, version, **kwargs):
+    def __init__(self, type, tablename, cardinality, **kwargs):
         raw = kwargs.pop('tags', {})
         tags, values = [], []
         for k, v in flatten_tags(raw):
-            if k == version:
+            if k == cardinality:
                 values.append(v)
             else:
                 tags.append((k, v))
@@ -96,8 +96,8 @@ class CardReport:
         reports = {}
         tablenames = []
         for value in values:
-            t_name = tablename.format(v1=version, v2=value)
-            t_tags = tags + [(version, value)]
+            t_name = tablename.format(v1=cardinality, v2=value)
+            t_tags = tags + [(cardinality, value)]
             reports[value] = Report(
                 type=type,
                 tablename=t_name,
@@ -105,7 +105,7 @@ class CardReport:
                 **kwargs
             )
             tablenames.append(t_name)
-        self.version = version
+        self.cardinality = cardinality
         self.versions = values
         self.reports = reports
         self.tablenames = tablenames

@@ -21,10 +21,13 @@ def load_config(filename):
             if not isinstance(percs, list):
                 percs = [percs]
             report['percentiles'] = [str(p) for p in percs]
-        if 'version' in report:
-            load_cart_report(report)
+        if 'cardinality' in report:
+            load_card_report(report)
         else:
             load_report(report)
+
+    for query in config.get('queries', []):
+        load_query(query)
 
     for query in config.get('collectd', []):
         q = load_query(query)
@@ -42,8 +45,8 @@ def load_gauge(gauge):
     return Gauge(**gauge)
 
 
-def load_cart_report(report):
-    attrs = 'type tablename version min_time max_time tags percentiles timers'.split()  # noqa
+def load_card_report(report):
+    attrs = 'type tablename cardinality min_time max_time tags percentiles timers'.split()  # noqa
     opts = {k: v for k, v in report.items() if k in attrs}
     result = CardReport(**opts)
     if 'id' in report:

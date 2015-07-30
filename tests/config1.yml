@@ -1,0 +1,32 @@
+---
+
+reports:
+  - id: myreport
+    type: report8
+    tablename: >
+      {v1}_{v2}_report_by_status
+    tags:
+      bot: [foo, bar]
+    cardinality: bot
+
+collectd:
+  - name: only_foo
+    stmt: |
+      SELECT status,
+          req_per_sec
+      FROM {tablename}
+    provider: myreport:foo
+    gauges:
+      - prefix: myprefix1
+        instances_from: status
+        values_from: req_per_sec
+  - name: everyone
+    stmt: |
+      SELECT status,
+          req_per_sec
+      FROM {tablename}
+    provider: myreport:union
+    gauges:
+      - prefix: myprefix2
+        instances_from: status
+        values_from: req_per_sec
