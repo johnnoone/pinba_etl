@@ -1,6 +1,3 @@
-from .reports import REPORTS
-from .queries import QUERIES
-from .collectd import COLLECTORS
 from .loaders import load_config, DEFAULT_FILENAME
 from .renderers import render_from_template
 
@@ -32,24 +29,24 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    load_config(args.configuration)
+    loader = load_config(args.configuration)
 
     if args.action == 'reports':
-        args.name = getattr(args, 'name', []) or list(REPORTS.keys())
-        for name, report in REPORTS.items():
+        args.name = getattr(args, 'name', []) or list(loader.REPORTS.keys())
+        for name, report in loader.REPORTS.items():
             if name in args.name:
                 print('\n-- %s\n' % name)
                 print(report)
 
     if args.action == 'queries':
-        args.name = getattr(args, 'name', []) or list(QUERIES.keys())
-        for k, v in QUERIES.items():
+        args.name = getattr(args, 'name', []) or list(loader.QUERIES.keys())
+        for k, v in loader.QUERIES.items():
             if k in args.name:
                 print('\n-- %s\n\n%s;' % (k, v))
 
     if args.action == 'collectd':
         params = {
-            'queries': [c for c in COLLECTORS.values() if c.has_gauges()],
+            'queries': [c for c in loader.COLLECTORS.values() if c.gauges],
             'driver': {
                 'host': args.host,
                 'username': args.username,

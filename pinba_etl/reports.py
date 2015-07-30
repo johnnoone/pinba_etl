@@ -7,7 +7,6 @@ from textwrap import dedent
 here = os.path.dirname(os.path.realpath(__file__))
 
 REPORT_TYPES = OrderedDict()
-REPORTS = OrderedDict()
 
 
 class ReportTypeBase:
@@ -52,7 +51,6 @@ class Report:
         self.tags = kwargs.pop('tags', {})
         self.percentiles = kwargs.pop('percentiles', [])
         self.timers = kwargs.pop('timers', [])
-        REPORTS[tablename] = self
 
     @property
     def conditions(self):

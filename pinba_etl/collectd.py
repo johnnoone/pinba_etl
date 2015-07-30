@@ -1,21 +1,10 @@
-from collections import defaultdict, OrderedDict
-
-GAUGES = defaultdict(list)
-COLLECTORS = OrderedDict()
-
 
 class Gauge:
 
-    def __init__(self,
-                 provider,
-                 name=None,
-                 values=None,
-                 cardinality=None):
-        self.provider = provider
+    def __init__(self, name=None, cardinality=None, values=None):
         self.name = name
         self.cardinality = cardinality
         self.values = values
-        GAUGES.setdefault(provider, []).append(self)
 
 
 class Collector:
@@ -23,10 +12,7 @@ class Collector:
     def __init__(self, name, query, gauges=None):
         self.query = query
         self.name = name
-        gauges = gauges or []
-        for gauge in gauges:
-            GAUGES[self.name].append(gauge)
-        COLLECTORS[name] = self
+        self.gauges = gauges or []
 
     @property
     def stmt(self):
@@ -36,12 +22,7 @@ class Collector:
 
     __str__ = stmt
 
-    @property
-    def gauges(self):
-        for gauge in GAUGES[self.name]:
-            yield gauge
-
-    __iter__ = gauges
+    __iter__ = lambda x: iter(x.gauges)
 
     def has_gauges(self):
         for g in self.gauges:
