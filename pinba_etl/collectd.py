@@ -23,5 +23,3 @@ class Collector:
         return obj.rstrip(';')
 
     __str__ = stmt
-
-    __iter__ = lambda x: iter(x.gauges)

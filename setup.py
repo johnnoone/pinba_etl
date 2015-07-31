@@ -11,6 +11,12 @@ setup(
         'jinja2',
         'pyaml'
     ],
+    # trying to add files...
+    include_package_data = True,
+    package_data = {
+        '': ['*.yml', '*.j2'],
+        'templates': ['*.yml', '*.j2'],
+    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
