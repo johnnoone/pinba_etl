@@ -2,7 +2,8 @@ Pinba ETL
 =========
 
 This tools aims to simplify Pinba_ maintenance.
-It allows to generate pinba reports, control queries and CollectD_ items.
+It allows to generate pinba reports, control queries and CollectD_ items
+(via it’s `DBI plugin`_).
 
 Installation
 ------------
@@ -46,7 +47,6 @@ Create a definitions file '~/pinba-ref.yml' and write some data in it::
           - name: myprefix2
             cardinality: status
             values: req_per_sec
-
 
 Now generate report creating queries::
 
@@ -181,6 +181,8 @@ Credits
 
 - Pinba_
 - CollectD_
+_ `DBI plugin`_
 
 .. _Pinba: http://pinba.org
 .. _CollectD: https://collectd.org
+.. _`DBI plugin`: https://collectd.org/wiki/index.php/Plugin:DBI

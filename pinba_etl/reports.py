@@ -40,7 +40,10 @@ class ReportType(ReportTypeBase):
     def __init__(self, type, description):
         with open(os.path.join(here, 'templates', '%s.sql.j2' % type)) as file:
             template = file.read()
-        super().__init__(type=type, description=description, template=template)
+        ReportTypeBase.__init__(self,
+                                type=type,
+                                description=description,
+                                template=template)
 
 
 class Report:
