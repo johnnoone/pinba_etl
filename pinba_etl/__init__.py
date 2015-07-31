@@ -1,8 +1,8 @@
-from .collectd import *
-from .loaders import *
-from .queries import *
-from .renderers import *
-from .reports import *
+from .collectd import *  # noqa
+from .loaders import *  # noqa
+from .queries import *  # noqa
+from .renderers import *  # noqa
+from .reports import *  # noqa
 
 __version__ = '0.2'
 __all__ = collectd.__all__

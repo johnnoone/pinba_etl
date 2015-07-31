@@ -86,11 +86,17 @@ class Loader:
         query = self.load_query(**opts)
         name = opts['name']
         for gauge in opts.get('gauges', []):
-            gauge.setdefault('provider', name)
-            self.load_gauge(**gauge)
+            provider, gauge = self.parse_gauge(gauge, name)
+            self.load_gauge(provider, **gauge)
         collector = Collector(name=name, query=query)
         self.COLLECTORS[name] = collector
         return collector
+
+    def parse_gauge(self, gauge, default_provider=None):
+        if isinstance(gauge, str):
+            gauge = deflate_gauge(gauge)
+        provider = gauge.pop('provider', default_provider)
+        return provider, gauge
 
     def load_gauge(self, provider, **opts):
         gauge = Gauge(**opts)
@@ -137,3 +143,37 @@ if __name__ == '__main__':
         if name in args.queries:
             print('-- %s' % name)
             print(query)
+
+
+def deflate_gauge(gauge):
+    """
+    >>> deflate_gauge('foo-bar-{baz}-{qux} {42}')
+    {'name': 'foo-bar', 'values': '42', 'cardinality': 'baz qux'}
+    """
+    response_values = []
+    response_name = None
+    response_cardinality = None
+
+    a = gauge.strip().split()
+    b, c = a[0], a[1:]
+    for v in c:
+        w = v[1:-1]
+        assert '{%s}' % w == v
+        response_values.append(w)
+    if '-{' in b:
+        pos = b.find('-{')
+        response_name, b = b[:pos], b[pos+1:]
+    elif not b.startswith('{'):
+        response_name, b = b, None
+
+    if b is not None:
+        d = b.replace('}-{', ' ').replace('{', '').replace('}', '')
+        d = ' '.join(d.split())
+        assert '{%s}' % d.replace(' ', '}-{') == b
+        response_cardinality, b = d, None
+
+    return {
+        'values': ' '.join(response_values),
+        'name': response_name,
+        'cardinality': response_cardinality
+    }

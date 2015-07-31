@@ -17,9 +17,9 @@ collectd:
       FROM {tablename}
     provider: myreport:foo
     gauges:
-      - prefix: myprefix1
-        instances_from: status
-        values_from: req_per_sec
+      - name: myprefix1
+        cardinality: status
+        values: req_per_sec
   - name: everyone
     stmt: |
       SELECT status,
@@ -27,6 +27,4 @@ collectd:
       FROM {tablename}
     provider: myreport:union
     gauges:
-      - prefix: myprefix2
-        instances_from: status
-        values_from: req_per_sec
+      - myprefix2-{status} {req_per_sec}

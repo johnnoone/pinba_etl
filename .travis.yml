@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.4"
+
+install:
+  - pip install .
+  - pip install pytest pytest-cov pytest-pep8
+
+script:
+  - py.test --pep8 pinba_etl -v --cov pinba_etl --cov-report term-missing tests

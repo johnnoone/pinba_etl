@@ -124,7 +124,7 @@ It will generate::
     UNION
     (SELECT status,
         req_per_sec
-    FROM bot_foo_report_by_status);;
+    FROM bot_foo_report_by_status);
 
 
 And at least, if you need to convert them to collectd::

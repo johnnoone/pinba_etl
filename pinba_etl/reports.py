@@ -119,10 +119,10 @@ class CardReport:
         for version, report in self.reports.items():
             query = report.query(template, version=version).rstrip(';')
             queries.append('(%s)' % query)
-        return '\nUNION\n'.join(queries) + ';'
+        return '\nUNION\n'.join(queries)
 
     def __str__(self):
-        return '\n'.join(self.create_tables())
+        return '\n\n'.join(self.create_tables())
 
 
 def flatten_tags(obj):
