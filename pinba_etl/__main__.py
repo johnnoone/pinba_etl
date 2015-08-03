@@ -1,16 +1,16 @@
-import fnmatch
 import re
 from .loaders import load_config, DEFAULT_FILENAME
 from .renderers import render_from_template
+from fnmatch import translate
 
 
 def compile_patterns(names):
     if not names:
         return re.compile('.*')
     elif len(names) == 1:
-        return re.compile(fnmatch.translate(names[0]))
+        return re.compile(translate(names[0]))
     else:
-        patterns = [fnmatch.translate(n).lstrip('^').rstrip('$') for n in names]
+        patterns = [translate(n).lstrip('^').rstrip('$') for n in names]
     return re.compile('^(' + '|'.join(patterns) + ')$')
 
 if __name__ == '__main__':
