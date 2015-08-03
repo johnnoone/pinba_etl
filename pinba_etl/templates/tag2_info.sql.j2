@@ -15,4 +15,4 @@ CREATE TABLE `{{ tablename }}` (
 	,
 	`p{{ perc}}` float DEFAULT NULL
 	{%- endfor %}
-) ENGINE=PINBA DEFAULT CHARSET=latin1 COMMENT='tag2_info:{{ timers | to_list }}:{{ conditions | to_list }}:{{ percentiles | to_list }}'
+) ENGINE=PINBA DEFAULT CHARSET=latin1 COMMENT='tag2_info:{{ timers | to_list }}:{{ conditions | to_list }}:{{ percentiles | to_list }}';
